@@ -2,6 +2,7 @@ PROTO_SRC=./proto
 GEN_SRC=./gen
 CLIENT_SRC=./client
 SERVER_SRC=./server
+PROXY_SRC=./proxy
 
 
 protoc:
@@ -22,3 +23,17 @@ run_server: | protoc
 
 run_client: | protoc
 	go run $(CLIENT_SRC)
+
+# example: three servers, two cients
+PROXY_PORT=:50051
+SERVER1_PORT=:50052
+SERVER2_PORT=:50053
+SERVER3_PORT=:50054
+
+run_example: | protoc
+	go run $(SERVER_SRC) -- $(SERVER1_PORT) server1 
+	go run $(SERVER_SRC) -- $(SERVER2_PORT) server2
+	go run $(SERVER_SRC) -- $(SERVER3_PORT) server3
+	go run $(PROXY_SRC) -- $(PROXY_PORT) "localhost$(SERVER1_PORT)" "localhost$(SERVER2_PORT)" "localhost$(SERVER3_PORT)"
+	go run $(CLIENT_SRC) -- client1 "localhost$(PROXY_PORT)"
+	go run $(CLIENT_SRC) -- client2 "localhost$(PROXY_PORT)"
