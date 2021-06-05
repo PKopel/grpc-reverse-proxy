@@ -1,0 +1,21 @@
+
+syntax = "proto3";
+
+option go_package = "flow_control/proto_gen";
+
+package proto_gen;
+
+message ExampleRequest {
+  string name = 1;
+  int64 id = 2;
+}
+
+message ExampleReply {
+  string message = 1;
+  int64 id = 2;
+}
+
+service ExampleService {
+  rpc ExampleCall (ExampleRequest) returns (ExampleReply) {}
+}
+
