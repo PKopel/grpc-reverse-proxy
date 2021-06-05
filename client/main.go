@@ -12,29 +12,36 @@ import (
 )
 
 const (
-	address     = "localhost:50051"
-	defaultName = "world"
+	defaultAddress = "localhost:50051"
+	defaultName    = "client"
 )
 
 func main() {
-	// Set up a connection to the server.
+
+	address := defaultAddress
+	name := defaultName
+	switch len(os.Args) {
+	case 3:
+		name = os.Args[1]
+		address = os.Args[2]
+	case 2:
+		name = os.Args[1]
+	}
+
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	defer conn.Close()
-	c := pb.NewExampleServiceClient(conn)
 
-	// Contact the server and print out its response.
-	name := defaultName
-	if len(os.Args) > 1 {
-		name = os.Args[1]
-	}
+	defer conn.Close()
+	client := pb.NewExampleServiceClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.ExampleCall(ctx, &pb.ExampleRequest{Name: name, Id: 1})
-	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+	for i := int64(0); i < 5; i++ {
+		result, err := client.ExampleCall(ctx, &pb.ExampleRequest{Name: name, Id: i})
+		if err != nil {
+			log.Fatalf("Error: %v", err)
+		}
+		log.Printf("Message: %s Id: %d", result.GetMessage(), result.GetId())
 	}
-	log.Printf("Greeting: %s", r.GetMessage())
 }
