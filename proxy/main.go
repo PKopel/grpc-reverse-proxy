@@ -10,6 +10,7 @@ import (
 
 const (
 	defaultPort = ":50051"
+	route       = "/proto_gen.ExampleService/ExampleCall"
 )
 
 type reverseProxy struct {
@@ -49,7 +50,7 @@ func main() {
 	}
 
 	proxy := reverseProxy{proxies: proxies, current: 0}
-	http.HandleFunc("/", proxy.handle)
+	http.HandleFunc(route, proxy.handle)
 	err := http.ListenAndServe(port, nil)
 	if err != nil {
 		panic(err)
