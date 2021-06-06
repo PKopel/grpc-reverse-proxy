@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	pb "rev_proxy/gen"
+	gen "rev_proxy/gen"
 
 	"google.golang.org/grpc"
 )
@@ -34,12 +34,12 @@ func main() {
 	}
 
 	defer conn.Close()
-	client := pb.NewExampleServiceClient(conn)
+	client := gen.NewExampleServiceClient(conn)
 	for i := int64(0); i < 5; i++ {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 
-		result, err := client.ExampleCall(ctx, &pb.ExampleRequest{Name: name, Id: i})
+		result, err := client.ExampleCall(ctx, &gen.ExampleRequest{Name: name, Id: i})
 		if err != nil {
 			log.Fatalf("Error: %v", err)
 		}

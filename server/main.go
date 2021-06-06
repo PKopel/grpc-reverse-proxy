@@ -7,7 +7,7 @@ import (
 	"net"
 	"os"
 
-	pb "rev_proxy/gen"
+	gen "rev_proxy/gen"
 
 	"google.golang.org/grpc"
 )
@@ -18,14 +18,14 @@ const (
 )
 
 type exampleServer struct {
-	pb.UnimplementedExampleServiceServer
+	gen.UnimplementedExampleServiceServer
 	name string
 }
 
-func (server *exampleServer) ExampleCall(ctx context.Context, in *pb.ExampleRequest) (*pb.ExampleReply, error) {
+func (server *exampleServer) ExampleCall(ctx context.Context, in *gen.ExampleRequest) (*gen.ExampleReply, error) {
 	log.Printf("Received: %v, id: %d", in.GetName(), in.GetId())
 	message := fmt.Sprintf("reply from %v to %v", server.name, in.GetName())
-	return &pb.ExampleReply{Message: message, Id: in.GetId()}, nil
+	return &gen.ExampleReply{Message: message, Id: in.GetId()}, nil
 }
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	server := grpc.NewServer()
-	pb.RegisterExampleServiceServer(server, &exampleServer{name: name})
+	gen.RegisterExampleServiceServer(server, &exampleServer{name: name})
 	if err := server.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

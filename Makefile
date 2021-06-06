@@ -26,5 +26,5 @@ run_client: | protoc
 build_docker:
 	docker build -t grpc_example -f server.Dockerfile .
 
-run_example: docker
+run_example: build_docker
 	docker-compose up
