@@ -1,9 +1,9 @@
 
 syntax = "proto3";
 
-option go_package = "flow_control/proto_gen";
+option go_package = "rev_proxy/gen";
 
-package proto_gen;
+package example_service;
 
 message ExampleRequest {
   string name = 1;
