@@ -9,4 +9,4 @@ COPY go.mod /app
 WORKDIR /app
 RUN go mod tidy
 EXPOSE 50051
-CMD ["go", "run", "./main.go", ":50051", "$SERVER_NAME"]
+CMD ["go", "run", "./main.go", ":50051"]

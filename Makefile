@@ -22,3 +22,9 @@ run_server: | protoc
 
 run_client: | protoc
 	go run $(CLIENT_SRC)
+
+build_docker:
+	docker build -t grpc_example -f server.Dockerfile .
+
+run_example: docker
+	docker-compose up

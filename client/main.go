@@ -35,13 +35,15 @@ func main() {
 
 	defer conn.Close()
 	client := pb.NewExampleServiceClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
 	for i := int64(0); i < 5; i++ {
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+
 		result, err := client.ExampleCall(ctx, &pb.ExampleRequest{Name: name, Id: i})
 		if err != nil {
 			log.Fatalf("Error: %v", err)
 		}
 		log.Printf("Message: %s Id: %d", result.GetMessage(), result.GetId())
+		time.Sleep(2 * time.Second)
 	}
 }
